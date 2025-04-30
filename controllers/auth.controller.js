@@ -2,12 +2,13 @@ import mongoose from "mongoose";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env";
+import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env.js";
+
 
 // implement signup logic here
 export const signUp = async (req, res, next) => {
-  const session = await mongoose.startSesssion();
-  session.startTransacation();
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
   try {
     // Create  a new user
@@ -25,27 +26,26 @@ export const signUp = async (req, res, next) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUsers = new User(
-      { name, email, password: hashedPassword },
-      { session }
-    );
+    const newUser = new User({ name, email, password: hashedPassword });
+    await newUser.save({ session });
 
-    const token = jwt.sign({ userId: newUsers[0]._id }, JWT_SECRET, {
-      expiresIn: JWT_EXPIRES_IN,
-    });
+    const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, {
+        expiresIn: JWT_EXPIRES_IN,
+      });
+      
 
     await session.commitTransaction();
     session.endSession();
 
     res.status(201).json({
-      success: true,
-      message: "User Created Sucessfully",
-
-      data: {
-        token,
-        user: newUsers[0],
-      },
-    });
+        success: true,
+        message: "User Created Successfully",
+        data: {
+          token,
+          user: newUser,
+        },
+      });
+  
   } catch (error) {
     session.abortTransacation();
     session.endSession();
