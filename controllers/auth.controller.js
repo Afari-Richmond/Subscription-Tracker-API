@@ -44,7 +44,7 @@ export const signUp = async (req, res, next) => {
       },
     });
   } catch (error) {
-    session.abortTransacation();
+    session.abortTransaction();
     session.endSession();
     return next(error);
   }
