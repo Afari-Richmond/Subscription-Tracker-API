@@ -5,21 +5,20 @@ import userRouter from "./routes/user.routes.js";
 import subscriptionRouter from "./routes/subscription.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import connectToDatabase from "./database/mongodb.js";
-import errorMiddleware  from "./middlewares/error.middleware.js"; 
+import errorMiddleware from "./middlewares/error.middleware.js";
 import cookieParser from "cookie-parser";
-
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser())
+app.use(cookieParser());
 
-app.use('/api/v1/users', userRouter)
-app.use('/api/v1/subsriptions', subscriptionRouter)
-app.use('/api/v1/auth', authRouter)
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/subsriptions", subscriptionRouter);
+app.use("/api/v1/auth", authRouter);
 
-app.use(errorMiddleware)
+app.use(errorMiddleware);
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Subsription Tracker API!");
@@ -28,7 +27,7 @@ app.get("/", (req, res) => {
 app.listen(PORT, async () => {
   console.log(`The Subscription server is running on http://localhost:${PORT}`);
 
-  await connectToDatabase()
+  await connectToDatabase();
 });
 
-export default app
+export default app;
