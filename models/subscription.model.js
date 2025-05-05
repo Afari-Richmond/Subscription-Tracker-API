@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const subsriptionsSchema = new mongoose.Schema(
+const subscriptionsSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -82,7 +82,7 @@ const subsriptionsSchema = new mongoose.Schema(
     },
 
     user: {
-      type: mongoose.Schema.Types.objectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
       index: true,
@@ -91,7 +91,7 @@ const subsriptionsSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-subsriptionsSchema.pre("save", function (next) {
+subscriptionsSchema.pre("save", function (next) {
   if (!this.renewalDate) {
     const renewalPeriods = {
       daily: 1,
@@ -113,5 +113,5 @@ subsriptionsSchema.pre("save", function (next) {
   next();
 });
 
-const Subsription = mongoose.model("Subsription", subsriptionsSchema);
-export default Subsription;
+const Subscription = mongoose.model("Subscription", subscriptionsSchema);
+export default Subscription;
